@@ -32,7 +32,9 @@ This is quite arbitrary, obviously, and it may not work for every page, but resu
 ## Sample of script output
 When launching a script (in Python 3), it asks for a URL, and spits out a report.
 
-For example, https://www.canada.ca/en/services/benefits/education/student-aid/grants-loans/repay.html gives an initial readability score of grade 11.96. The adjusted Flesch-Kincaid score is 7.91 (because of all the bullet points and headings). Converted into points and factoring in the words between headings and number of words per paragraph, it gives a score of 82.85/100.
+For example, https://www.canada.ca/en/services/benefits/education/student-aid/grants-loans/repay.html gives an initial readability score of grade 11.96.  
+The adjusted Flesch-Kincaid score is 7.91 (because of all the bullet points and headings).  
+Converted into points and factoring in the words between headings and number of words per paragraph, it gives a score of 82.85/100.
 
 Here's the output:
 
