@@ -79,7 +79,7 @@ finder = BigramCollocationFinder.from_words(
         words_en)
 
 finder.apply_freq_filter(3)
-print (finder.nbest(bigram_measures.likelihood_ratio, 10))
+print (finder.nbest(bigram_measures.likelihood_ratio, 20))
 
 #look at trigrams
 trigram_measures = nltk.collocations.TrigramAssocMeasures()
