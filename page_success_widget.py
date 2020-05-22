@@ -6,27 +6,28 @@ import nltk
 from wordcloud import WordCloud
 
 #import CSV file as a Pandas dataframe
-data = pd.read_csv('success_widget.csv', index_col = 0)
+data = pd.read_csv('success_widget_1.csv', index_col = 0)
 
-#Separate English and French data
-data_en = data[data['Page URL'].str.contains("/en", na=False)]
+    #Separate English and French data
+data_en = data[data['Page URL'].str.contains("EN", na=False)]
 
-data_fr = data[data['Page URL'].str.contains("/fr", na=False)]
+data_fr = data[data['Page URL'].str.contains("FR", na=False)]
 
-#look at what's wrong
+    #look at what's wrong
+what = data["What's wrong"]
+
 what_en = data_en["What's wrong"]
 what_fr = data_fr["What's wrong"]
 
 
 #plot what's wrong
 
-what_en.value_counts().sort_index().plot.barh(x='Reason', y='Number of occurrences')
+what.value_counts().sort_index().plot.barh(title = 'Feedback by reason', x='Reason', y='Number of occurrences')
 plt.show()
 
-what_fr.value_counts().sort_index().plot.barh(x='Raisons', y="Nombre d'occurences")
+tasks = data['Tasks']
+tasks.value_counts().plot.barh(title = 'Feedback by task', x='Reason', y='Number of occurrences')
 plt.show()
-
-
 
 #analyzing words
 word_list_en = data_en["Details"].tolist()
@@ -56,6 +57,7 @@ for word in words_en:
 from nltk import FreqDist
 fdist1 = FreqDist(words_ns_en)
 most_common_en = fdist1.most_common(50)
+print('Most common words:')
 print(most_common_en)
 
 #WordCloud
@@ -73,18 +75,25 @@ plt.show()
 
 
 #look at bigrams
-from nltk.collocations import *
-bigram_measures = nltk.collocations.BigramAssocMeasures()
-finder = BigramCollocationFinder.from_words(
-        words_en)
 
-finder.apply_freq_filter(3)
-print (finder.nbest(bigram_measures.likelihood_ratio, 20))
+
+from nltk.collocations import BigramCollocationFinder
+from nltk.metrics import BigramAssocMeasures
+bcf = BigramCollocationFinder.from_words(words_en)
+from nltk.corpus import stopwords
+stopset = set(stopwords.words('english'))
+filter_stops = lambda w: len(w) < 3 or w in stopset
+bcf.apply_word_filter(filter_stops)
+print('Most common bigrams:')
+print(bcf.nbest(BigramAssocMeasures.likelihood_ratio, 20))
 
 #look at trigrams
-trigram_measures = nltk.collocations.TrigramAssocMeasures()
-finder = TrigramCollocationFinder.from_words(
-        words_en)
-
-finder.apply_freq_filter(3)
-print (finder.nbest(trigram_measures.likelihood_ratio, 20))
+from nltk.collocations import TrigramCollocationFinder
+from nltk.metrics import TrigramAssocMeasures
+tcf = TrigramCollocationFinder.from_words(words_en)
+from nltk.corpus import stopwords
+stopset = set(stopwords.words('english'))
+filter_stops = lambda w: len(w) < 3 or w in stopset
+tcf.apply_word_filter(filter_stops)
+print('Most common trigrams:')
+print(tcf.nbest(TrigramAssocMeasures.likelihood_ratio, 20))
