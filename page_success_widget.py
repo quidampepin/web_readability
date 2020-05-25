@@ -6,7 +6,7 @@ import nltk
 from wordcloud import WordCloud
 
 #import CSV file as a Pandas dataframe
-data = pd.read_csv('success_widget_1.csv', index_col = 0)
+data = pd.read_csv('page_success_widget_all.csv', index_col = 0)
 
     #Separate English and French data
 data_en = data[data['Page URL'].str.contains("EN", na=False)]
@@ -22,17 +22,33 @@ what_fr = data_fr["What's wrong"]
 
 #plot what's wrong
 
-what.value_counts().sort_index().plot.barh(title = 'Feedback by reason', x='Reason', y='Number of occurrences')
+plt.rcParams['figure.figsize'] = (10, 6)
+plt.gcf().subplots_adjust(left=0.25)
+what.value_counts().sort_values().plot.barh(title = 'Feedback by reason', x='Reason', y='Number of occurrences')
 plt.show()
 
+
+#plot by task
 tasks = data['Tasks']
-tasks.value_counts().plot.barh(title = 'Feedback by task', x='Reason', y='Number of occurrences')
+tasks = data_en["Tasks"].str.split(", ", n = 3, expand = True)
+tasks = tasks.apply(pd.Series.value_counts)
+tasks = tasks.fillna(0)
+tasks = tasks[0] + tasks[1] + tasks[2]
+tasks = tasks.astype(int)
+tasks = tasks.sort_values(ascending = False)
+plt.rcParams['figure.figsize'] = (14, 8)
+plt.gcf().subplots_adjust(left=0.30)
+tasks.sort_values().plot.barh(title = 'Feedback by task', x='Reason', y='Number of occurrences')
 plt.show()
 
-#analyzing words
+#analyzing  words
 word_list_en = data_en["Details"].tolist()
 word_list_en = [str(i) for i in word_list_en]
 all_words_en = ' '.join([str(elem) for elem in word_list_en])
+
+word_list_fr = data_fr["Details"].tolist()
+word_list_fr = [str(i) for i in word_list_fr]
+all_words_fr = ' '.join([str(elem) for elem in word_list_fr])
 
 #tokenize words
 tokenizer = nltk.RegexpTokenizer(r"\w+")
@@ -41,8 +57,14 @@ words_en = []
 for word in tokens_en:
         words_en.append(word.lower())
 
-#remove nation
+tokens_fr = tokenizer.tokenize(all_words_fr)
+words_fr = []
+for word in tokens_fr:
+        words_fr.append(word.lower())
+
+#remove nan
 words_en = list(filter(('nan').__ne__, words_en))
+words_fr = list(filter(('nan').__ne__, words_fr))
 
 #remove stop words to get most frequent words
 nltk.download('stopwords')
@@ -57,8 +79,46 @@ for word in words_en:
 from nltk import FreqDist
 fdist1 = FreqDist(words_ns_en)
 most_common_en = fdist1.most_common(50)
-print('Most common words:')
+print('Most common words EN:')
 print(most_common_en)
+
+swf = nltk.corpus.stopwords.words('french')
+swf.append('covid')
+swf.append('19')
+swf.append('a')
+swf.append('si')
+swf.append('avoir')
+swf.append('savoir')
+swf.append('combien')
+swf.append('être')
+swf.append('où')
+swf.append('comment')
+swf.append('puis')
+swf.append('peuvent')
+swf.append('fait')
+swf.append('aucun')
+swf.append('bonjour')
+swf.append('depuis')
+swf.append('chez')
+swf.append('faire')
+swf.append('peut')
+swf.append('plus')
+swf.append('veux')
+swf.append('dois')
+swf.append('doit')
+swf.append('dit')
+swf.append('merci')
+swf.append('cela')
+
+words_ns_fr = []
+for word in words_fr:
+        if word not in swf:
+            words_ns_fr.append(word)
+
+fdist1 = FreqDist(words_ns_fr)
+most_common_fr = fdist1.most_common(50)
+print('Most common words FR:')
+print(most_common_fr)
 
 #WordCloud
 word_cloud_en = ' '.join(words_ns_en)
@@ -74,6 +134,18 @@ plt.axis("off")
 plt.show()
 
 
+word_cloud_fr = ' '.join(words_ns_fr)
+
+wordcloud = WordCloud(max_font_size=40).generate(word_cloud_fr)
+
+import matplotlib.pyplot as plt
+
+plt.imshow(wordcloud, interpolation='bilinear')
+
+plt.axis("off")
+
+plt.show()
+
 #look at bigrams
 
 
@@ -81,19 +153,32 @@ from nltk.collocations import BigramCollocationFinder
 from nltk.metrics import BigramAssocMeasures
 bcf = BigramCollocationFinder.from_words(words_en)
 from nltk.corpus import stopwords
-stopset = set(stopwords.words('english'))
+stopset = sw
 filter_stops = lambda w: len(w) < 3 or w in stopset
 bcf.apply_word_filter(filter_stops)
-print('Most common bigrams:')
+print('Most common bigrams EN:')
 print(bcf.nbest(BigramAssocMeasures.likelihood_ratio, 20))
+
+
+bcffr = BigramCollocationFinder.from_words(words_fr)
+from nltk.corpus import stopwords
+stopsetfr = swf
+filter_stopsfr = lambda w: len(w) < 3 or w in stopsetfr
+bcffr.apply_word_filter(filter_stopsfr)
+print('Most common bigrams FR:')
+print(bcffr.nbest(BigramAssocMeasures.likelihood_ratio, 20))
 
 #look at trigrams
 from nltk.collocations import TrigramCollocationFinder
 from nltk.metrics import TrigramAssocMeasures
 tcf = TrigramCollocationFinder.from_words(words_en)
-from nltk.corpus import stopwords
-stopset = set(stopwords.words('english'))
-filter_stops = lambda w: len(w) < 3 or w in stopset
 tcf.apply_word_filter(filter_stops)
-print('Most common trigrams:')
+print('Most common trigrams EN:')
 print(tcf.nbest(TrigramAssocMeasures.likelihood_ratio, 20))
+
+from nltk.collocations import TrigramCollocationFinder
+from nltk.metrics import TrigramAssocMeasures
+tcffr = TrigramCollocationFinder.from_words(words_fr)
+tcffr.apply_word_filter(filter_stopsfr)
+print('Most common trigrams FR:')
+print(tcffr.nbest(TrigramAssocMeasures.likelihood_ratio, 20))
