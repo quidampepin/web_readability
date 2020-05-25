@@ -66,7 +66,7 @@ for word in tokens_fr:
 words_en = list(filter(('nan').__ne__, words_en))
 words_fr = list(filter(('nan').__ne__, words_fr))
 
-#remove stop words to get most frequent words
+#remove English stop words to get most frequent words
 nltk.download('stopwords')
 sw = nltk.corpus.stopwords.words('english')
 sw.append('covid')
@@ -76,11 +76,31 @@ for word in words_en:
         if word not in sw:
             words_ns_en.append(word)
 
+#Plot English most common words
 from nltk import FreqDist
 fdist1 = FreqDist(words_ns_en)
 most_common_en = fdist1.most_common(50)
-print('Most common words EN:')
-print(most_common_en)
+most_common_df = pd.DataFrame(most_common_en, columns = ['Word', 'Count'])
+plt.rcParams['figure.figsize'] = (14, 8)
+plt.gcf().subplots_adjust(left=0.30)
+most_common_df.plot.barh(title = 'Most frequent words - English', x='Word',y='Count')
+plt.show()
+
+
+#WordCloud English
+word_cloud_en = ' '.join(words_ns_en)
+
+wordcloud = WordCloud(max_font_size=40).generate(word_cloud_en)
+
+import matplotlib.pyplot as plt
+
+plt.imshow(wordcloud, interpolation='bilinear')
+
+plt.axis("off")
+
+plt.show()
+
+#remove French stop words
 
 swf = nltk.corpus.stopwords.words('french')
 swf.append('covid')
@@ -109,30 +129,26 @@ swf.append('doit')
 swf.append('dit')
 swf.append('merci')
 swf.append('cela')
+swf.append('pouvons')
+swf.append('pouvaient')
+swf.append('vers')
 
 words_ns_fr = []
 for word in words_fr:
         if word not in swf:
             words_ns_fr.append(word)
 
+#plot most frequent French words
 fdist1 = FreqDist(words_ns_fr)
 most_common_fr = fdist1.most_common(50)
-print('Most common words FR:')
-print(most_common_fr)
-
-#WordCloud
-word_cloud_en = ' '.join(words_ns_en)
-
-wordcloud = WordCloud(max_font_size=40).generate(word_cloud_en)
-
-import matplotlib.pyplot as plt
-
-plt.imshow(wordcloud, interpolation='bilinear')
-
-plt.axis("off")
-
+most_common_df_fr = pd.DataFrame(most_common_fr, columns = ['Mot', 'Nombre'])
+plt.rcParams['figure.figsize'] = (14, 8)
+plt.gcf().subplots_adjust(left=0.30)
+most_common_df_fr.plot.barh(title = 'Mots les plus fréquents - Français', x='Mot',y='Nombre')
 plt.show()
 
+
+#WordCloud French
 
 word_cloud_fr = ' '.join(words_ns_fr)
 
@@ -146,8 +162,8 @@ plt.axis("off")
 
 plt.show()
 
-#look at bigrams
 
+#English bigrams
 
 from nltk.collocations import BigramCollocationFinder
 from nltk.metrics import BigramAssocMeasures
@@ -156,29 +172,62 @@ from nltk.corpus import stopwords
 stopset = sw
 filter_stops = lambda w: len(w) < 3 or w in stopset
 bcf.apply_word_filter(filter_stops)
-print('Most common bigrams EN:')
-print(bcf.nbest(BigramAssocMeasures.likelihood_ratio, 20))
+bcf_list = bcf.nbest(BigramAssocMeasures.likelihood_ratio, 20)
+bcf_joint_list = []
+for words in bcf_list:
+        bcf_joint_list.append(' '.join(words))
+print('')
+print('')
+print('Most probable bigrams:')
+for item in bcf_joint_list:
+        print(item)
 
 
+#English trigrams
+from nltk.collocations import TrigramCollocationFinder
+from nltk.metrics import TrigramAssocMeasures
+tcf = TrigramCollocationFinder.from_words(words_en)
+tcf.apply_word_filter(filter_stops)
+tcf_list = tcf.nbest(TrigramAssocMeasures.likelihood_ratio, 20)
+tcf_joint_list = []
+for words in tcf_list:
+        tcf_joint_list.append(' '.join(words))
+print('')
+print('')
+print('Most probable trigrams:')
+for item in tcf_joint_list:
+        print(item)
+
+
+#French bigrams
 bcffr = BigramCollocationFinder.from_words(words_fr)
 from nltk.corpus import stopwords
 stopsetfr = swf
 filter_stopsfr = lambda w: len(w) < 3 or w in stopsetfr
 bcffr.apply_word_filter(filter_stopsfr)
-print('Most common bigrams FR:')
-print(bcffr.nbest(BigramAssocMeasures.likelihood_ratio, 20))
+bcffr_list = bcffr.nbest(BigramAssocMeasures.likelihood_ratio, 20)
+bcffr_joint_list = []
+for words in bcffr_list:
+        bcffr_joint_list.append(' '.join(words))
+print('')
+print('')
+print('Bigrammes les plus probables :')
+for item in bcffr_joint_list:
+        print(item)
 
-#look at trigrams
-from nltk.collocations import TrigramCollocationFinder
-from nltk.metrics import TrigramAssocMeasures
-tcf = TrigramCollocationFinder.from_words(words_en)
-tcf.apply_word_filter(filter_stops)
-print('Most common trigrams EN:')
-print(tcf.nbest(TrigramAssocMeasures.likelihood_ratio, 20))
+
+#French trigrams
 
 from nltk.collocations import TrigramCollocationFinder
 from nltk.metrics import TrigramAssocMeasures
 tcffr = TrigramCollocationFinder.from_words(words_fr)
 tcffr.apply_word_filter(filter_stopsfr)
-print('Most common trigrams FR:')
-print(tcffr.nbest(TrigramAssocMeasures.likelihood_ratio, 20))
+tcffr_list = tcffr.nbest(TrigramAssocMeasures.likelihood_ratio, 20)
+tcffr_joint_list = []
+for words in tcffr_list:
+        tcffr_joint_list.append(' '.join(words))
+print('')
+print('')
+print('Trigrammes les plus probables :')
+for item in tcffr_joint_list:
+        print(item)
