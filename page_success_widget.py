@@ -81,9 +81,9 @@ from nltk import FreqDist
 fdist1 = FreqDist(words_ns_en)
 most_common_en = fdist1.most_common(50)
 most_common_df = pd.DataFrame(most_common_en, columns = ['Word', 'Count'])
+most_common_df.plot.barh(title = 'Most frequent words - English - All feedback', x='Word',y='Count')
 plt.rcParams['figure.figsize'] = (14, 8)
-plt.gcf().subplots_adjust(left=0.30)
-most_common_df.plot.barh(title = 'Most frequent words - English', x='Word',y='Count')
+plt.gcf().subplots_adjust(left=0.20)
 plt.show()
 
 
@@ -142,9 +142,9 @@ for word in words_fr:
 fdist1 = FreqDist(words_ns_fr)
 most_common_fr = fdist1.most_common(50)
 most_common_df_fr = pd.DataFrame(most_common_fr, columns = ['Mot', 'Nombre'])
+most_common_df_fr.plot.barh(title = 'Mots les plus fréquents - Toute la rétroaction - Français', x='Mot',y='Nombre')
 plt.rcParams['figure.figsize'] = (14, 8)
-plt.gcf().subplots_adjust(left=0.30)
-most_common_df_fr.plot.barh(title = 'Mots les plus fréquents - Français', x='Mot',y='Nombre')
+plt.gcf().subplots_adjust(left=0.20)
 plt.show()
 
 
@@ -231,3 +231,64 @@ print('')
 print('Trigrammes les plus probables :')
 for item in tcffr_joint_list:
         print(item)
+
+
+#look at data by what's wrong value_counts
+#most common words info is missing
+data_missing_en = data_en[data_en["What's wrong"].str.contains("missing", na=False)]
+
+word_list_missing_en = data_missing_en["Details"].tolist()
+word_list_missing_en = [str(i) for i in word_list_missing_en]
+all_words_missing_en = ' '.join([str(elem) for elem in word_list_missing_en])
+
+tokenizer = nltk.RegexpTokenizer(r"\w+")
+tokens_missing_en = tokenizer.tokenize(all_words_missing_en)
+words_missing_en = []
+for word in tokens_missing_en:
+        words_missing_en.append(word.lower())
+
+words_missing_en = list(filter(('nan').__ne__, words_missing_en))
+
+words_missing_ns_en = []
+for word in words_missing_en:
+        if word not in sw:
+            words_missing_ns_en.append(word)
+
+from nltk import FreqDist
+fdist1 = FreqDist(words_missing_ns_en)
+most_common_missing_en = fdist1.most_common(50)
+most_common_missing_df = pd.DataFrame(most_common_missing_en, columns = ['Word', 'Count'])
+most_common_missing_df.plot.barh(title = 'Most frequent words - English - Information is missing', x='Word',y='Count')
+plt.rcParams['figure.figsize'] = (14, 8)
+plt.gcf().subplots_adjust(left=0.20)
+plt.show()
+
+
+# most common words clear
+data_clear_en = data_en[data_en["What's wrong"].str.contains("clear", na=False)]
+
+word_list_clear_en = data_clear_en["Details"].tolist()
+word_list_clear_en = [str(i) for i in word_list_clear_en]
+all_words_clear_en = ' '.join([str(elem) for elem in word_list_clear_en])
+
+tokenizer = nltk.RegexpTokenizer(r"\w+")
+tokens_clear_en = tokenizer.tokenize(all_words_clear_en)
+words_clear_en = []
+for word in tokens_clear_en:
+        words_clear_en.append(word.lower())
+
+words_clear_en = list(filter(('nan').__ne__, words_clear_en))
+
+words_clear_ns_en = []
+for word in words_clear_en:
+        if word not in sw:
+            words_clear_ns_en.append(word)
+
+from nltk import FreqDist
+fdist1 = FreqDist(words_clear_ns_en)
+most_common_clear_en = fdist1.most_common(50)
+most_common_clear_df = pd.DataFrame(most_common_clear_en, columns = ['Word', 'Count'])
+most_common_clear_df.plot.barh(title = 'Most frequent words - English - Information is not clear', x='Word',y='Count')
+plt.rcParams['figure.figsize'] = (14, 8)
+plt.gcf().subplots_adjust(left=0.20)
+plt.show()
