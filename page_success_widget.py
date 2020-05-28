@@ -6,12 +6,12 @@ import nltk
 from wordcloud import WordCloud
 
 #import CSV file as a Pandas dataframe
-data = pd.read_csv('page_success_widget_all.csv', index_col = 0)
+data = pd.read_csv('page_success_may_24.csv', index_col = 0)
 
     #Separate English and French data
-data_en = data[data['Page URL'].str.contains("EN", na=False)]
+data_en = data[data['Page URL'].str.contains("/en", na=False)]
 
-data_fr = data[data['Page URL'].str.contains("FR", na=False)]
+data_fr = data[data['Page URL'].str.contains("/fr", na=False)]
 
     #look at what's wrong
 what = data["What's wrong"]
@@ -25,20 +25,23 @@ what_fr = data_fr["What's wrong"]
 plt.rcParams['figure.figsize'] = (10, 6)
 plt.gcf().subplots_adjust(left=0.25)
 what.value_counts().sort_values().plot.barh(title = 'Feedback by reason', x='Reason', y='Number of occurrences')
+plt.savefig('feedback_by_reason.png')
 plt.show()
 
 
 #plot by task
-tasks = data['Tasks']
-tasks = data_en["Tasks"].str.split(", ", n = 3, expand = True)
+tasks = data['Topic']
+tasks = data_en["Topic"].str.split(", ", n = 3, expand = True)
 tasks = tasks.apply(pd.Series.value_counts)
 tasks = tasks.fillna(0)
 tasks = tasks[0] + tasks[1] + tasks[2]
 tasks = tasks.astype(int)
 tasks = tasks.sort_values(ascending = False)
+tasks = tasks[0:30]
 plt.rcParams['figure.figsize'] = (14, 8)
 plt.gcf().subplots_adjust(left=0.30)
-tasks.sort_values().plot.barh(title = 'Feedback by task', x='Reason', y='Number of occurrences')
+tasks.sort_values().plot.barh(title = 'Top 30 tasks', x='Reason', y='Number of occurrences')
+plt.savefig('feedback_by_task.png')
 plt.show()
 
 #analyzing  words
@@ -84,6 +87,7 @@ most_common_df = pd.DataFrame(most_common_en, columns = ['Word', 'Count'])
 most_common_df.plot.barh(title = 'Most frequent words - English - All feedback', x='Word',y='Count')
 plt.rcParams['figure.figsize'] = (14, 8)
 plt.gcf().subplots_adjust(left=0.20)
+plt.savefig('frequent_words_en_all.png')
 plt.show()
 
 
@@ -97,7 +101,7 @@ import matplotlib.pyplot as plt
 plt.imshow(wordcloud, interpolation='bilinear')
 
 plt.axis("off")
-
+plt.savefig('word_cloud_en.png')
 plt.show()
 
 #remove French stop words
@@ -145,6 +149,7 @@ most_common_df_fr = pd.DataFrame(most_common_fr, columns = ['Mot', 'Nombre'])
 most_common_df_fr.plot.barh(title = 'Mots les plus fréquents - Toute la rétroaction - Français', x='Mot',y='Nombre')
 plt.rcParams['figure.figsize'] = (14, 8)
 plt.gcf().subplots_adjust(left=0.20)
+plt.savefig('frequent_words_fr_all.png')
 plt.show()
 
 
@@ -159,7 +164,7 @@ import matplotlib.pyplot as plt
 plt.imshow(wordcloud, interpolation='bilinear')
 
 plt.axis("off")
-
+plt.savefig('word_cloud_fr.png')
 plt.show()
 
 
@@ -261,6 +266,7 @@ most_common_missing_df = pd.DataFrame(most_common_missing_en, columns = ['Word',
 most_common_missing_df.plot.barh(title = 'Most frequent words - English - Information is missing', x='Word',y='Count')
 plt.rcParams['figure.figsize'] = (14, 8)
 plt.gcf().subplots_adjust(left=0.20)
+plt.savefig('frequent_missing_en.png')
 plt.show()
 
 
@@ -291,4 +297,5 @@ most_common_clear_df = pd.DataFrame(most_common_clear_en, columns = ['Word', 'Co
 most_common_clear_df.plot.barh(title = 'Most frequent words - English - Information is not clear', x='Word',y='Count')
 plt.rcParams['figure.figsize'] = (14, 8)
 plt.gcf().subplots_adjust(left=0.20)
+plt.savefig('frequent_not_clear_en.png')
 plt.show()
