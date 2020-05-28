@@ -181,11 +181,10 @@ bcf_list = bcf.nbest(BigramAssocMeasures.likelihood_ratio, 20)
 bcf_joint_list = []
 for words in bcf_list:
         bcf_joint_list.append(' '.join(words))
-print('')
-print('')
-print('Most probable bigrams:')
-for item in bcf_joint_list:
-        print(item)
+
+#save list in txt file
+with open("bigrams_en.txt", "w") as output:
+        output.write(str(bcf_joint_list))
 
 
 #English trigrams
@@ -197,11 +196,8 @@ tcf_list = tcf.nbest(TrigramAssocMeasures.likelihood_ratio, 20)
 tcf_joint_list = []
 for words in tcf_list:
         tcf_joint_list.append(' '.join(words))
-print('')
-print('')
-print('Most probable trigrams:')
-for item in tcf_joint_list:
-        print(item)
+with open("trigrams_en.txt", "w") as output:
+        output.write(str(tcf_joint_list))
 
 
 #French bigrams
@@ -214,11 +210,8 @@ bcffr_list = bcffr.nbest(BigramAssocMeasures.likelihood_ratio, 20)
 bcffr_joint_list = []
 for words in bcffr_list:
         bcffr_joint_list.append(' '.join(words))
-print('')
-print('')
-print('Bigrammes les plus probables :')
-for item in bcffr_joint_list:
-        print(item)
+with open("bigrams_fr.txt", "w") as output:
+        output.write(str(bcffr_joint_list))
 
 
 #French trigrams
@@ -231,11 +224,8 @@ tcffr_list = tcffr.nbest(TrigramAssocMeasures.likelihood_ratio, 20)
 tcffr_joint_list = []
 for words in tcffr_list:
         tcffr_joint_list.append(' '.join(words))
-print('')
-print('')
-print('Trigrammes les plus probables :')
-for item in tcffr_joint_list:
-        print(item)
+with open("trigrams_fr.txt", "w") as output:
+        output.write(str(tcffr_joint_list))
 
 
 #look at data by what's wrong value_counts
