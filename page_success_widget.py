@@ -1,6 +1,8 @@
 #import libraries
 import pandas as pd
 import csv
+import matplotlib
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import nltk
 from wordcloud import WordCloud
@@ -26,8 +28,7 @@ plt.rcParams['figure.figsize'] = (10, 6)
 plt.gcf().subplots_adjust(left=0.25)
 what.value_counts().sort_values().plot.barh(title = 'Feedback by reason', x='Reason', y='Number of occurrences')
 plt.savefig('feedback_by_reason.png')
-plt.show()
-
+plt.clf()
 
 #plot by task
 tasks = data['Topic']
@@ -42,7 +43,7 @@ plt.rcParams['figure.figsize'] = (14, 8)
 plt.gcf().subplots_adjust(left=0.30)
 tasks.sort_values().plot.barh(title = 'Top 30 tasks', x='Reason', y='Number of occurrences')
 plt.savefig('feedback_by_task.png')
-plt.show()
+plt.clf()
 
 #analyzing  words
 word_list_en = data_en["Details"].tolist()
@@ -88,7 +89,7 @@ most_common_df.plot.barh(title = 'Most frequent words - English - All feedback',
 plt.rcParams['figure.figsize'] = (14, 8)
 plt.gcf().subplots_adjust(left=0.20)
 plt.savefig('frequent_words_en_all.png')
-plt.show()
+plt.clf()
 
 
 #WordCloud English
@@ -102,7 +103,7 @@ plt.imshow(wordcloud, interpolation='bilinear')
 
 plt.axis("off")
 plt.savefig('word_cloud_en.png')
-plt.show()
+plt.clf()
 
 #remove French stop words
 
@@ -150,7 +151,7 @@ most_common_df_fr.plot.barh(title = 'Mots les plus fréquents - Toute la rétroa
 plt.rcParams['figure.figsize'] = (14, 8)
 plt.gcf().subplots_adjust(left=0.20)
 plt.savefig('frequent_words_fr_all.png')
-plt.show()
+plt.clf()
 
 
 #WordCloud French
@@ -165,7 +166,7 @@ plt.imshow(wordcloud, interpolation='bilinear')
 
 plt.axis("off")
 plt.savefig('word_cloud_fr.png')
-plt.show()
+plt.clf()
 
 
 #English bigrams
@@ -266,8 +267,7 @@ most_common_missing_df.plot.barh(title = 'Most frequent words - English - Inform
 plt.rcParams['figure.figsize'] = (14, 8)
 plt.gcf().subplots_adjust(left=0.20)
 plt.savefig('frequent_missing_en.png')
-plt.show()
-
+plt.clf()
 
 # most common words clear
 data_clear_en = data_en[data_en["What's wrong"].str.contains("clear", na=False)]
@@ -297,4 +297,4 @@ most_common_clear_df.plot.barh(title = 'Most frequent words - English - Informat
 plt.rcParams['figure.figsize'] = (14, 8)
 plt.gcf().subplots_adjust(left=0.20)
 plt.savefig('frequent_not_clear_en.png')
-plt.show()
+plt.clf()
