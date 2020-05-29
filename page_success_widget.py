@@ -8,7 +8,7 @@ import nltk
 from wordcloud import WordCloud
 
 #import CSV file as a Pandas dataframe
-data = pd.read_csv('page_success_may_24.csv', index_col = 0)
+data = pd.read_csv('page_success_may_27.csv', index_col = 0)
 
     #Separate English and French data
 data_en = data[data['Page URL'].str.contains("/en", na=False)]
@@ -35,7 +35,7 @@ tasks = data['Topic']
 tasks = data_en["Topic"].str.split(", ", n = 3, expand = True)
 tasks = tasks.apply(pd.Series.value_counts)
 tasks = tasks.fillna(0)
-tasks = tasks[0] + tasks[1] + tasks[2]
+tasks = tasks[0] + tasks[1]
 tasks = tasks.astype(int)
 tasks = tasks.sort_values(ascending = False)
 tasks = tasks[0:30]
