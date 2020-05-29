@@ -1,3 +1,6 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
 #get the url
 url = input("Enter a URL: ")
 
@@ -54,7 +57,7 @@ for word in words:
 #get the 15 most used words in the text
 from nltk import FreqDist
 fdist1 = FreqDist(words_ns)
-most_common = fdist1.most_common(15)
+most_common = fdist1.most_common(20)
 
 #get all headings and calculate how many words on average between headings
 headings = original_soup.findAll(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
@@ -92,11 +95,29 @@ else :
 total_score = fkpoints+hpoints+ppoints
 
 #print results
-print ('Initial readability score:', format(original_fk.score, '.2f'))
+print ('Readability score without adjustment:', format(original_fk.score, '.2f'))
 print ('Total points:', format(total_score, '.2f'), '/100')
-print ('Basic readabilty points:', format(fkpoints, '.2f'), '/60', '(Flesch-Kincaid readability score of:', format(final_fk.score, '.2f'), ')')
+print ('Readabilty points:', format(fkpoints, '.2f'), '/60', '(Adjusted Flesch-Kincaid readability score of:', format(final_fk.score, '.2f'), ')')
 print ('Heading points: ', format(hpoints, '.2f'), '/20', '(words per heading:', format(hratio, '.2f'), ')')
 print ('Paragraph points: ', format(ppoints, '.2f'), '/20', '(words per paragraph:', format(pratio, '.2f'), ')')
 print('Number of words: ', len(words))
 print('Most used words')
 print(*most_common,sep='\n')
+
+#save readability score to txt file
+f = open( 'readability.txt', 'w' )
+f.write( 'Web readability score: ' + format(total_score, '.2f') + '/100' + '\n' + '\n')
+f.write( 'Detailed points used in score: ' + '\n')
+f.write( 'Basic readability points: ' + format(fkpoints, '.2f') + '/60 ' + '(Adjusted Flesch-Kincaid readability score of: ' + format(final_fk.score, '.2f') + ')' + '\n')
+f.write( 'Heading points: ' + format(hpoints, '.2f') + '/20' + ' (words per heading: ' + format(hratio, '.2f') + ')' + '\n')
+f.write( 'Paragraph points: ' + format(ppoints, '.2f') + '/20' + ' (words per paragraph: ' + format(pratio, '.2f') + ')' + '\n')
+f.write( 'Number of words: ' + str(len(words)) + '\n')
+f.close()
+
+#print plot of most used words
+most_common_df = pd.DataFrame(most_common, columns = ['Word', 'Count'])
+most_common_df.plot.barh(title = 'Most frequent words - English - All feedback', x='Word',y='Count')
+plt.rcParams['figure.figsize'] = (14, 8)
+plt.gcf().subplots_adjust(left=0.20)
+plt.savefig('frequent_words.png')
+plt.show()
