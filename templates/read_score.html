@@ -1,0 +1,18 @@
+<h2>Web readability score</h2>
+
+<p><strong>Total score = {{ total_score }}/100</strong></p>
+
+
+<h3>Total score details</h3>
+
+<ul>
+<li>Basic readability points: {{ fkpoints }}/60 (Adjusted Flesch-Kincaid readability score of: {{ final_fk_score }})</li>
+<li>Heading points: {{ hpoints }}/20 (words per heading: {{ hratio }})</li>
+<li>Paragraph points: {{ ppoints }}/20 (words per paragraph: {{ pratio }})</li>
+</ul>
+
+<h2>Total number of words on page</h2>
+<p>{{ total_words }}</p>
+
+<h2>Most frequent words on page</h2>
+<p>Most frequent words: {{ most_common }}</p>

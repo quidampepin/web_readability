@@ -1,0 +1,7 @@
+Web readability score: 70.95/100
+
+Detailed points used in score: 
+Basic readability points: 49.94/60 (Adjusted Flesch-Kincaid readability score of: 8.01)
+Heading points: 4.37/20 (words per heading: 165.05)
+Paragraph points: 16.65/20 (words per paragraph: 38.38)
+Number of words: 3301
