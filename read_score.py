@@ -114,6 +114,8 @@ def suggest():
         pratio = format(pratio, '.2f')
         total_words = len(words)
 
+        return render_template("read_score_en.html", total_score = total_score, fkpoints = fkpoints, final_fk_score = final_fk_score, hpoints = hpoints, hratio = hratio, ppoints = ppoints, pratio = pratio, total_words = total_words, most_common = most_common)
+
     if lang == 'fr':
 
 	    #get url
@@ -217,7 +219,7 @@ def suggest():
         pratio = format(pratio, '.2f')
         total_words = len(words)
 
-    return render_template("read_score.html", total_score = total_score, fkpoints = fkpoints, final_fk_score = final_fk_score, hpoints = hpoints, hratio = hratio, ppoints = ppoints, pratio = pratio, total_words = total_words, most_common = most_common)
+        return render_template("read_score_fr.html", total_score = total_score, fkpoints = fkpoints, final_fk_score = final_fk_score, hpoints = hpoints, hratio = hratio, ppoints = ppoints, pratio = pratio, total_words = total_words, most_common = most_common)
 
 if __name__ == '__main__':
     app.run()

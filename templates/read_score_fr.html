@@ -1,0 +1,18 @@
+<h2>Score de lisibilité Web</h2>
+
+<p><strong>Score total = {{ total_score }}/100</strong></p>
+
+
+<h3>Détails du score total</h3>
+
+<ul>
+<li>Points de lisibilité de base : {{ fkpoints }}/60 (Adjusted Flesch-Kincaid readability score of: {{ final_fk_score }})</li>
+<li>Points pour les en-têtes : {{ hpoints }}/20 (words per heading: {{ hratio }})</li>
+<li>Points pour les paragraphes {{ ppoints }}/20 (words per paragraph: {{ pratio }})</li>
+</ul>
+
+<h2>Nombre total de mots sur la page</h2>
+<p>{{ total_words }}</p>
+
+<h2>Mots les plus fréquents sur la page</h2>
+<p>{{ most_common }}</p>
